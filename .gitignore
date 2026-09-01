@@ -1,0 +1,21 @@
+# External clones
+ruflo/
+
+# Dependencies
+node_modules/
+npm-debug.log
+pnpm-debug.log
+
+# Environment
+.env
+.env.local
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
