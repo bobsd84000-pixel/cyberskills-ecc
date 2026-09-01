@@ -38,6 +38,10 @@ After installation:
 - Memory and RAG systems
 - MCP server integration
 
+## 📊 Dashboards
+
+- [Économie de tokens](https://claude.ai/code/artifact/b9a98b68-ba61-4d60-9703-312dfc82971c) — usage réel de tokens (neuf vs cache), coût et économie réalisée
+
 ## 🔗 Resources
 
 - [Ruflo on npm](https://www.npmjs.com/package/ruflo)
