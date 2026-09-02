@@ -1,0 +1,8 @@
+{
+  "name": "anthropic-pack",
+  "description": "Skills utilitaires: mode de communication compressé (caveman) et suivi d'état des tâches (task-observer).",
+  "version": "0.1.0",
+  "author": {
+    "name": "bobsd84000-pixel"
+  }
+}

@@ -15,6 +15,15 @@ Or manually: `/plugin marketplace add ruvnet/ruflo` → `/plugin install ruflo-c
 npx ruflo init --wizard
 ```
 
+## 🔌 Marketplace de plugins (ce dépôt)
+
+Ce dépôt est aussi une marketplace de plugins Claude Code. Il fournit le plugin `anthropic-pack` (skills `caveman` et `task-observer`).
+
+```
+/plugin marketplace add bobsd84000-pixel/cyberskills-ecc
+/plugin install anthropic-pack@cyberskills-ecc
+```
+
 ## 📚 Documentation
 
 | File | Purpose |
