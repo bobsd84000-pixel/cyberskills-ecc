@@ -18,6 +18,10 @@ REDDIT_RESULTS = {
         {"title": "Understanding Rust's borrow checker - deep dive", "subreddit": "rust", "score": 3450, "url": "reddit.com/r/rust/comments/pqr678"},
         {"title": "Unsafe Rust - when and how to use it", "subreddit": "rust", "score": 2100, "url": "reddit.com/r/rust/comments/stu901"},
     ],
+    "docker security": [
+        {"title": "Docker container escape vectors - what to check", "subreddit": "docker", "score": 1780, "url": "reddit.com/r/docker/comments/vwx234"},
+        {"title": "Rootless Docker in production - lessons learned", "subreddit": "devops", "score": 990, "url": "reddit.com/r/devops/comments/yza567"},
+    ],
 }
 
 GITHUB_RESULTS = {
@@ -33,6 +37,10 @@ GITHUB_RESULTS = {
     "rust memory": [
         {"title": "rust-lang/rust", "stars": 95800, "url": "github.com/rust-lang/rust", "lang": "Rust"},
         {"title": "tokio-rs/tokio", "stars": 27900, "url": "github.com/tokio-rs/tokio", "lang": "Rust"},
+    ],
+    "docker security": [
+        {"title": "docker/docker-bench-security", "stars": 8600, "url": "github.com/docker/docker-bench-security", "lang": "Shell"},
+        {"title": "aquasecurity/trivy", "stars": 24100, "url": "github.com/aquasecurity/trivy", "lang": "Go"},
     ],
 }
 
