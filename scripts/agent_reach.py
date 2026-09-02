@@ -30,14 +30,18 @@ def search_reddit(query, limit=10):
 
 
 def search_github(query, limit=10):
-    gh = Github(os.environ.get("GITHUB_TOKEN"))
+    token = os.environ.get("GITHUB_TOKEN")
+    gh = Github(token) if token else Github()
     results = []
-    for repo in gh.search_repositories(query=query)[:limit]:
-        results.append({
-            "title": repo.full_name,
-            "url": repo.html_url,
-            "stars": repo.stargazers_count,
-        })
+    try:
+        for repo in gh.search_repositories(query=query)[:limit]:
+            results.append({
+                "title": repo.full_name,
+                "url": repo.html_url,
+                "stars": repo.stargazers_count,
+            })
+    except Exception as e:
+        results.append({"error": str(e)})
     return results
 
 
