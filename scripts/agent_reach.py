@@ -1,65 +1,69 @@
 #!/usr/bin/env python3
-"""Scraper Reddit (praw) + GitHub (PyGithub) par mot-cle.
-
-Credentials via variables d'environnement:
-  REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET, REDDIT_USER_AGENT
-  GITHUB_TOKEN
-"""
+"""Agent Reach — search GitHub live with token."""
 import argparse
 import os
-
-import praw
-from github import Github
-
-
-def search_reddit(query, limit=10):
-    reddit = praw.Reddit(
-        client_id=os.environ["REDDIT_CLIENT_ID"],
-        client_secret=os.environ["REDDIT_CLIENT_SECRET"],
-        user_agent=os.environ.get("REDDIT_USER_AGENT", "agent_reach/1.0"),
-    )
-    results = []
-    for submission in reddit.subreddit("all").search(query, limit=limit):
-        results.append({
-            "title": submission.title,
-            "url": f"https://reddit.com{submission.permalink}",
-            "score": submission.score,
-            "subreddit": str(submission.subreddit),
-        })
-    return results
+import json
+import urllib.request
+import urllib.parse
+import sys
 
 
 def search_github(query, limit=10):
+    """Search GitHub API with optional token."""
     token = os.environ.get("GITHUB_TOKEN")
-    gh = Github(token) if token else Github()
+    encoded_query = urllib.parse.quote(query)
+    url = f"https://api.github.com/search/repositories?q={encoded_query}&per_page={limit}&sort=stars"
+
     results = []
     try:
-        for repo in gh.search_repositories(query=query)[:limit]:
-            results.append({
-                "title": repo.full_name,
-                "url": repo.html_url,
-                "stars": repo.stargazers_count,
-            })
+        req = urllib.request.Request(url)
+        if token:
+            req.add_header("Authorization", f"token {token}")
+        req.add_header("Accept", "application/vnd.github.v3+json")
+
+        with urllib.request.urlopen(req, timeout=5) as response:
+            data = json.loads(response.read().decode())
+            for repo in data.get("items", []):
+                results.append({
+                    "title": repo["full_name"],
+                    "url": repo["html_url"],
+                    "stars": repo["stargazers_count"],
+                    "lang": repo.get("language", "Unknown"),
+                })
+    except urllib.error.HTTPError as e:
+        print(f"GitHub API error ({e.code}): {e.reason}", file=sys.stderr)
     except Exception as e:
-        results.append({"error": str(e)})
+        print(f"Error: {e}", file=sys.stderr)
+
     return results
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Recherche Reddit + GitHub")
-    parser.add_argument("query", help="mot-cle a rechercher")
+    parser = argparse.ArgumentParser(description="Agent Reach - search GitHub")
+    parser.add_argument("query", help="search keyword")
     parser.add_argument("--limit", type=int, default=10)
+    parser.add_argument("--json", action="store_true")
     args = parser.parse_args()
 
-    print(f"=== Reddit ({args.query}) ===")
-    for item in search_reddit(args.query, args.limit):
-        print(f"[{item['score']:>5}] r/{item['subreddit']} - {item['title']}")
-        print(f"        {item['url']}")
+    results = search_github(args.query, args.limit)
 
-    print(f"\n=== GitHub ({args.query}) ===")
-    for item in search_github(args.query, args.limit):
-        print(f"[{item['stars']:>5}★] {item['title']}")
-        print(f"        {item['url']}")
+    if args.json:
+        print(json.dumps(results, indent=2))
+        return
+
+    print(f"\n{'='*60}")
+    print(f"Agent Reach: {args.query}")
+    print(f"{'='*60}\n")
+
+    print("📌 GITHUB")
+    print("-" * 60)
+    if results:
+        for item in results:
+            print(f"[{item['stars']:>6}★] {item['lang']}")
+            print(f"    {item['title']}")
+            print(f"    → {item['url']}\n")
+    else:
+        print("No results found.\n")
 
 
 if __name__ == "__main__":
